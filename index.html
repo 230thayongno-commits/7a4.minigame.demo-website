@@ -3,31 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>7A4 Genius - Galaxy Mission</title>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;900&family=Nunito:wght@400;700;900&display=swap" rel="stylesheet">
+    <title>7A4 - Forest Study</title>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;700&family=Nunito:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-deep: #050b14;
-            --bg-card: rgba(20, 30, 50, 0.7);
-            --neon-blue: #00f3ff;
-            --neon-pink: #bc13fe;
-            --neon-green: #0aff0a;
-            --neon-yellow: #f1ff00;
-            --text-white: #ffffff;
-            --glass-border: 1px solid rgba(255, 255, 255, 0.1);
+            --forest-dark: #2d4739;
+            --forest-mid: #52796f;
+            --forest-light: #84a59d;
+            --mint: #cad2c5;
+            --cream: #f8f9f1;
+            --white: #ffffff;
         }
 
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
         body {
             font-family: 'Nunito', sans-serif;
-            background-color: var(--bg-deep);
+            background-color: var(--mint);
+            /* Background họa tiết lá cây đơn giản nhưng đẹp */
             background-image: 
-                radial-gradient(circle at 50% 0%, #1a2a44 0%, transparent 60%),
-                radial-gradient(circle at 100% 100%, #2e1065 0%, transparent 50%),
-                linear-gradient(to bottom, #020617, #0f172a);
-            background-attachment: fixed;
-            color: var(--text-white);
+                url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M50 20c-5 10-15 10-15 20s10 10 15 20c5-10 15-10 15-20s-10-10-15-20z' fill='%2352796f' fill-opacity='0.05'/%3E%3Cpath d='M10 70c-3 6-9 6-9 12s6 6 9 12c3-6 9-6 9-12s-6-6-9-12z' fill='%2352796f' fill-opacity='0.03'/%3E%3C/svg%3E");
+            color: var(--forest-dark);
             margin: 0; padding: 0; 
             min-height: 100vh;
             display: flex;
@@ -35,158 +31,248 @@
             align-items: center;
         }
 
-        h1, h2, h3 { font-family: 'Orbitron', sans-serif; letter-spacing: 1px; }
+        /* Trang trí lá cây ở góc màn hình */
+        body::before {
+            content: "";
+            position: fixed;
+            top: -50px; left: -50px;
+            width: 200px; height: 200px;
+            background: url("data:image/svg+xml,%3Csvg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 100 Q 50 50 100 100' stroke='%2384a59d' stroke-width='2' fill='none' opacity='0.3'/%3E%3Ccircle cx='20' cy='80' r='5' fill='%2352796f' opacity='0.2'/%3E%3C/svg%3E");
+            z-index: -1;
+        }
 
-        .screen {
+        .container {
             width: 100%;
-            max-width: 500px;
+            max-width: 480px;
             padding: 20px;
-            display: none;
-            flex-direction: column;
-            align-items: center;
+            z-index: 1;
         }
 
-        #selector-screen { 
-            display: flex; 
-            min-height: 100vh;
-            justify-content: center;
-        }
-
-        .glass-box {
-            background: var(--bg-card);
-            backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-            border: var(--glass-border);
-            border-radius: 20px;
-            padding: 25px; width: 100%;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+        header {
+            text-align: center;
             margin-bottom: 20px;
+            padding: 30px 20px;
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            border-radius: 30px;
+            border: 1px solid rgba(255,255,255,0.5);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
         }
 
-        .tiktok-btn {
-            display: flex; align-items: center; justify-content: center; gap: 10px;
-            background: linear-gradient(90deg, #000000, #333333);
-            border: 1px solid #444;
-            color: white !important; text-decoration: none !important;
-            padding: 15px 20px; border-radius: 50px;
-            font-weight: 800; width: 100%; margin: 30px 0 50px 0;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+        h1 {
+            font-family: 'Quicksand', sans-serif;
+            color: var(--forest-dark);
+            margin: 0;
+            font-size: 1.6em;
+            letter-spacing: 2px;
+            font-weight: 700;
+        }
+
+        .badge {
+            display: inline-block;
+            background: var(--forest-mid);
+            color: white;
+            padding: 4px 15px;
+            border-radius: 50px;
+            font-size: 0.75em;
+            font-weight: 700;
+margin-top: 10px;
+            letter-spacing: 1px;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 25px;
+            padding: 25px;
+            margin-bottom: 18px;
+            box-shadow: 0 8px 20px rgba(45, 71, 57, 0.05);
+            border: 1px solid white;
             transition: transform 0.2s;
+        }
+
+        .card-title {
+            font-family: 'Quicksand', sans-serif;
+            font-weight: 700;
+            font-size: 1.05em;
+            color: var(--forest-dark);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-main {
+            width: 100%;
+            padding: 16px;
+            border-radius: 18px;
+            border: none;
+            background: var(--forest-dark);
+            color: white;
+            font-weight: 700;
+            font-size: 0.95em;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-main:active { transform: scale(0.98); background: #1b2d24; }
+
+        .btn-secondary {
+            width: 100%;
+            margin-top: 10px;
+            padding: 12px;
+            background: transparent;
+            border: 1px solid var(--forest-light);
+            border-radius: 15px;
+            color: var(--forest-mid);
+            font-weight: 600;
             cursor: pointer;
         }
-        .tiktok-btn:active { transform: scale(0.97); opacity: 0.9; }
 
-        .grid-teams { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; width: 100%; }
-        
-        .team-btn {
-            background: rgba(255,255,255,0.05);
-border: 1px solid rgba(255,255,255,0.2);
-            padding: 20px 10px; border-radius: 15px;
-            color: white; font-weight: 900; font-size: 1.1em;
-            cursor: pointer; font-family: 'Orbitron', sans-serif;
+        .q-box {
+            background: var(--cream);
+            padding: 25px;
+            border-radius: 20px;
+            text-align: center;
+            margin-bottom: 20px;
+            font-weight: 800;
+            color: var(--forest-dark);
+            border: 1px solid var(--mint);
+        }
+
+        .game-input {
+            width: 100%;
+            padding: 18px;
+            border-radius: 18px;
+            border: 2px solid var(--mint);
+            font-size: 1.4em;
+            text-align: center;
+            margin-bottom: 15px;
+            outline: none;
+            background: var(--white);
+            color: var(--forest-dark);
+        }
+
+        .option-btn {
+            width: 100%;
+            padding: 15px;
+            margin-bottom: 10px;
+            background: var(--white);
+            border: 1.5px solid var(--mint);
+            border-radius: 18px;
+            text-align: left;
+            font-weight: 600;
+            cursor: pointer;
+            color: var(--forest-dark);
             transition: all 0.2s;
         }
 
-        .t1 { color: var(--neon-blue); border-color: var(--neon-blue); }
-        .t2 { color: var(--neon-pink); border-color: var(--neon-pink); }
-        .t3 { color: var(--neon-green); border-color: var(--neon-green); }
-        .t4 { color: var(--neon-yellow); border-color: var(--neon-yellow); }
+        .option-btn:hover { background: var(--cream); border-color: var(--forest-light); }
+        .option-btn:active { background: var(--mint); }
 
-        .team-btn:active { background: white; color: black; transform: scale(0.95); }
-
-        header {
-            width: 100%;
-            display: flex; justify-content: space-between; align-items: center;
-            margin-bottom: 20px; padding-bottom: 15px;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
+        .locked {
+            background: rgba(255,255,255,0.4);
+            border: 1.5px dashed var(--forest-light);
+            filter: grayscale(0.5);
         }
 
-        .game-card {
-            background: rgba(30, 41, 59, 0.7);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 18px; padding: 20px; margin-bottom: 15px;
-            width: 100%; position: relative; overflow: hidden;
+        .locked-tag {
+            margin-left: auto;
+font-size: 0.65em;
+            background: #cbd5e0;
+            padding: 2px 8px;
+            border-radius: 4px;
+            color: #4a5568;
         }
 
-        .points-badge { font-size: 0.75em; background: rgba(255,255,255,0.1); padding: 4px 8px; border-radius: 6px; color: var(--neon-green); border: 1px solid var(--neon-green); }
+        .footer {
+            text-align: center;
+            padding: 30px 0 50px;
+        }
 
-        .card-locked { opacity: 0.5; background: rgba(15, 23, 42, 0.5); border: 1px dashed #64748b; }
-        .coming-soon-badge { position: absolute; top: 10px; right: -30px; background: #ef4444; color: white; padding: 5px 30px; font-size: 0.6em; font-weight: 900; transform: rotate(45deg); }
+        .tiktok-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: #000;
+            color: white;
+            text-decoration: none;
+            padding: 15px 30px;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 0.9em;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
 
-        .start-btn { width: 100%; padding: 14px; border-radius: 12px; border: none; font-weight: 800; cursor: pointer; margin-top: 10px; background: white; color: #020617; font-size: 1em; }
-        .stop-btn { width: 100%; padding: 10px; border-radius: 10px; border: 1px solid #475569; background: transparent; color: #94a3b8; font-weight: 700; cursor: pointer; margin-top: 15px; font-size: 0.8em; }
-
-        .game-input { width: 100%; background: #0f172a; border: 1px solid #334155; color: white; padding: 12px; font-size: 1.5em; text-align: center; border-radius: 10px; margin-bottom: 10px; outline: none; }
-        .opt-btn { width: 100%; padding: 14px; margin-bottom: 10px; background: rgba(255,255,255,0.05); color: #cbd5e1; border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; text-align: left; font-weight: 600; cursor: pointer; }
-        .opt-btn:active { background: var(--neon-blue); color: black; }
-
-        .progress-bg { height: 10px; background: rgba(0,0,0,0.3); border-radius: 5px; margin-top: 5px; }
-        .progress-fill { height: 100%; border-radius: 5px; transition: width 0.5s ease-out; }
-#toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: white; color: black; padding: 12px 25px; border-radius: 30px; font-weight: 900; font-size: 0.9em; display: none; z-index: 10000; box-shadow: 0 5px 20px rgba(0,0,0,0.5); }
+        #toast {
+            position: fixed;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--forest-dark);
+            color: white;
+            padding: 12px 30px;
+            border-radius: 50px;
+            font-weight: 700;
+            display: none;
+            z-index: 9999;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
     </style>
 </head>
 <body>
 
-    <div id="toast">Thông báo</div>
+    <div id="toast">Tuyệt vời!</div>
 
-    <div id="selector-screen" class="screen">
-        <div class="glass-box" style="text-align: center;">
-            <h1 style="font-size: 3em; margin: 0; color: white;">7A4</h1>
-            <p style="color: #94a3b8; letter-spacing: 3px; margin-top: -5px; margin-bottom: 25px; font-size: 0.8em; font-weight: bold;">GALAXY MISSION</p>
-            <div style="text-align: left; margin-bottom: 12px; font-size: 0.8em; color: #64748b; font-weight: bold;">CHỌN PHI ĐỘI:</div>
-            <div class="grid-teams">
-                <button class="team-btn t1" onclick="app.join('Tổ 1')">TỔ 1</button>
-                <button class="team-btn t2" onclick="app.join('Tổ 2')">TỔ 2</button>
-                <button class="team-btn t3" onclick="app.join('Tổ 3')">TỔ 3</button>
-                <button class="team-btn t4" onclick="app.join('Tổ 4')">TỔ 4</button>
-            </div>
-        </div>
-    </div>
-
-    <div id="main-app" class="screen">
+    <div class="container">
         <header>
-            <div style="font-family:'Orbitron'; font-weight: 900; font-size: 1.1em;">MISSION CONTROL</div>
-            <div style="display: flex; gap: 8px; align-items: center;">
-                <span id="user-badge" style="font-weight: bold; font-size: 0.8em; padding: 5px 12px; border-radius: 20px; background: rgba(255,255,255,0.1);">Team</span>
-                <button onclick="app.exit()" style="background:transparent; border: 1px solid #475569; color: #94a3b8; padding: 6px 12px; border-radius: 8px; font-size: 0.7em;">Thoát</button>
-            </div>
+            <h1>7A4 STUDY ZONE</h1>
+            <div class="badge">BẢN THỬ NGHIỆM</div>
         </header>
 
-        <div class="glass-box" style="padding: 20px;">
-            <h3 style="margin: 0 0 15px 0; font-size: 0.9em; color: #facc15;">🏆 BẢNG XẾP HẠNG</h3>
-            <div id="rank-container"></div>
-        </div>
-
-        <!-- MATH GAME -->
-        <div class="game-card" id="math-card">
-            <div class="game-header" style="display: flex; justify-content: space-between;">
-                <h3 style="margin:0; font-size: 1em;">🚀 Toán Học</h3>
-                <span class="points-badge">+5 ĐIỂM</span>
+        <!-- MATH SECTION -->
+        <div class="card" id="math-card">
+            <div class="card-title"><span>📐</span> TOÁN HỌC</div>
+            <div id="math-intro">
+                <p style="font-size: 0.9em; color: var(--forest-mid); line-height: 1.6;">Luyện tập các phép tính cơ bản và lũy thừa n², n³ một cách nhanh chóng.</p>
+                <button class="btn-main" onclick="math.start()">BẮT ĐẦU HỌC</button>
             </div>
-            <div id="math-start-view">
-                <p style="font-size: 0.8em; color: #94a3b8; margin: 10px 0;">Cộng, Trừ, Nhân, Chia, Số mũ.</p>
-                <button class="start-btn" onclick="mathGame.start()">LUYỆN TẬP</button>
-            </div>
-            <div id="math-play-view" style="display: none;">
-                <div id="math-q" style="font-size: 2em; text-align: center; font-weight: 900; margin: 20px 0; font-family: 'Orbitron'; color: var(--neon-blue);">?</div>
-<input type="number" id="math-input" class="game-input" placeholder="..." inputmode="numeric">
-                <button class="start-btn" style="background: var(--neon-blue); color: black;" onclick="mathGame.check()">XÁC NHẬN</button>
-                <button class="stop-btn" onclick="mathGame.stop()">DỪNG LẠI</button>
+            <div id="math-play" style="display: none;">
+                <div id="math-q" class="q-box" style="font-size: 2em;">?</div>
+                <input type="number" id="math-input" class="game-input" placeholder="..." inputmode="numeric">
+                <button class="btn-main" onclick="math.check()">XÁC NHẬN</button>
+                <button class="btn-secondary" onclick="math.stop()">DỪNG</button>
             </div>
         </div>
 
-        <!-- ENGLISH GAME -->
-        <div class="game-card" id="en-card">
-            <div class="game-header" style="display: flex; justify-content: space-between;">
-                <h3 style="margin:0; font-size: 1em;">🌍 Anh Văn</h3>
-                <span class="points-badge" style="color:var(--neon-pink); border-color:var(--neon-pink)">+10 ĐIỂM</span>
+        <!-- ENGLISH SECTION -->
+        <div class="card" id="en-card">
+            <div class="card-title"><span>🌿</span> TIẾNG ANH GALAXY</div>
+            <div id="en-intro">
+                <p style="font-size: 0.9em; color: var(--forest-mid); line-height: 1.6;">Hơn 150 câu hỏi từ vựng và ngữ pháp bám sát chương trình học.</p>
+                <button class="btn-main" style="background: var(--forest-mid);" onclick="english.start()">BẮT ĐẦU HỌC</button>
             </div>
-            <div id="en-start-view">
-                <p style="font-size: 0.8em; color: #94a3b8; margin: 10px 0;">Ngữ pháp (thì) & Từ vựng mới.</p>
-                <button class="start-btn" onclick="enGame.start()">LUYỆN TẬP</button>
-            </div>
-            <div id="en-play-view" style="display: none;">
-                <p id="en-q" style="font-weight: bold; text-align: center; font-size: 1.1em; margin-bottom: 15px; min-height: 2.5em;">Question?</p>
+            <div id="en-play" style="display: none;">
+                <div id="en-q" class="q-box" style="font-size: 1.1em; line-height: 1.4; text-align: left;">Loading...</div>
                 <div id="en-opts"></div>
-                <button class="stop-btn" onclick="enGame.stop()">DỪNG LẠI</button>
+<button class="btn-secondary" onclick="english.stop()">DỪNG</button>
             </div>
         </div>
+
+        <!-- COMING SOON -->
+        <div class="card locked">
+            <div class="card-title"><span>🧪</span> KHOA HỌC TỰ NHIÊN <span class="locked-tag">SẮP CÓ</span></div>
+            <p style="font-size: 0.8em; color: #718096; margin: 0;">Dữ liệu về Vật lý, Hóa học và Sinh học đang được biên soạn.</p>
+        </div>
+
+        <div class="card locked">
+            <div class="card-title"><span>👥</span> ĐỐ VUI THÀNH VIÊN <span class="locked-tag">SẮP CÓ</span></div>
+            <p style="font-size: 0.8em; color: #718096; margin: 0;">Những câu đố vui về các bạn "siêu quậy" lớp 7A4.</p>
+        </div>
+
+        <div class="footer">
+            <a href="https://www.tiktok.com/@7a4.tvl.2025.2026" target="_blank" class="tiktok-btn">
+                <svg width="20" height="20" fill="white" viewBox="0 0 24 24"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85
