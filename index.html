@@ -4,217 +4,189 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>7A4 Genius - Galaxy Mission</title>
-    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;900&family=Nunito:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         :root {
-            /* Galaxy Harmonized Palette (Soft Neon) */
-            --to1: #4deeea; /* Bright Cyan */
-            --to2: #f000ff; /* Electric Purple/Pink */
-            --to3: #001eff; /* Deep Blue Neon */
-            --to4: #74ee15; /* Alien Green */
-            --dark: #020617;
-            --white: #FFFFFF;
-            --gray: #94a3b8;
+            --bg-deep: #050b14;
+            --bg-card: rgba(20, 30, 50, 0.7);
+            --neon-blue: #00f3ff;
+            --neon-pink: #bc13fe;
+            --neon-green: #0aff0a;
+            --neon-yellow: #f1ff00;
+            --text-white: #ffffff;
+            --glass-border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
         body {
             font-family: 'Nunito', sans-serif;
-            background-color: var(--dark);
+            background-color: var(--bg-deep);
             background-image: 
-                radial-gradient(white, rgba(255,255,255,.1) 1px, transparent 20px),
-                linear-gradient(to bottom, #020617, #1e1b4b);
-            background-size: 150px 150px, 100% 100%;
-            margin: 0; padding: 0; color: var(--white);
-            overflow-x: hidden; min-height: 100vh;
-            touch-action: manipulation;
+                radial-gradient(circle at 50% 0%, #1a2a44 0%, transparent 60%),
+                radial-gradient(circle at 100% 100%, #2e1065 0%, transparent 50%),
+                linear-gradient(to bottom, #020617, #0f172a);
+            background-attachment: fixed;
+            color: var(--text-white);
+            margin: 0; padding: 0; 
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
-        /* Selector Screen */
-        #selector-screen {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: radial-gradient(circle at center, rgba(30,27,75,0.7), var(--dark)),
-                        url('https://images.unsplash.com/photo-1462331940025-496dfbfc7564?q=80&w=1000&auto=format&fit=crop');
-            background-size: cover; background-position: center;
-            display: flex; flex-direction: column; justify-content: center; align-items: center;
-            z-index: 9999; padding: 20px; text-align: center;
+        h1, h2, h3 { font-family: 'Orbitron', sans-serif; letter-spacing: 1px; }
+
+        .screen {
+            width: 100%;
+            max-width: 500px;
+            padding: 20px;
+            display: none;
+            flex-direction: column;
+            align-items: center;
         }
 
-        .selector-box {
-            background: rgba(15, 23, 42, 0.6);
-            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-            padding: 35px 25px; border-radius: 40px;
-            border: 1px solid rgba(255,255,255,0.1);
-            width: 100%; max-width: 400px;
-            box-shadow: 0 0 60px rgba(0, 0, 0, 0.5);
+        #selector-screen { 
+            display: flex; 
+            min-height: 100vh;
+            justify-content: center;
         }
 
-        .mobile-warning {
-            background: rgba(255, 255, 255, 0.1);
-            color: #fbbf24;
-            padding: 8px 15px;
-            border-radius: 50px;
-            font-size: 0.75em;
-            font-weight: 900;
-            display: inline-block;
+        .glass-box {
+            background: var(--bg-card);
+            backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+            border: var(--glass-border);
+            border-radius: 20px;
+            padding: 25px; width: 100%;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
             margin-bottom: 20px;
-            border: 1px solid rgba(251, 191, 36, 0.3);
-            text-transform: uppercase;
-            letter-spacing: 1px;
         }
 
-        .grid-teams { 
-            display: grid; grid-template-columns: repeat(2, 1fr); 
-            gap: 15px; margin-top: 20px; 
+        .tiktok-btn {
+            display: flex; align-items: center; justify-content: center; gap: 10px;
+            background: linear-gradient(90deg, #000000, #333333);
+            border: 1px solid #444;
+            color: white !important; text-decoration: none !important;
+            padding: 15px 20px; border-radius: 50px;
+            font-weight: 800; width: 100%; margin: 30px 0 50px 0;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            transition: transform 0.2s;
+            cursor: pointer;
         }
+        .tiktok-btn:active { transform: scale(0.97); opacity: 0.9; }
 
-        /* Harmonized Team Buttons */
-        .team-card {
-            padding: 22px 5px; border: 1.5px solid rgba(255,255,255,0.1); border-radius: 20px;
-color: white; font-size: 1.2em; font-weight: 900;
-            cursor: pointer; transition: 0.3s;
-            display: block; width: 100%;
+        .grid-teams { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; width: 100%; }
+        
+        .team-btn {
             background: rgba(255,255,255,0.05);
-            backdrop-filter: blur(5px);
+border: 1px solid rgba(255,255,255,0.2);
+            padding: 20px 10px; border-radius: 15px;
+            color: white; font-weight: 900; font-size: 1.1em;
+            cursor: pointer; font-family: 'Orbitron', sans-serif;
+            transition: all 0.2s;
         }
 
-        .team-card[data-t="1"] { border-color: var(--to1); color: var(--to1); box-shadow: inset 0 0 15px rgba(77, 238, 234, 0.2); }
-        .team-card[data-t="2"] { border-color: var(--to2); color: var(--to2); box-shadow: inset 0 0 15px rgba(240, 0, 255, 0.2); }
-        .team-card[data-t="3"] { border-color: var(--to3); color: var(--to3); box-shadow: inset 0 0 15px rgba(0, 30, 255, 0.2); }
-        .team-card[data-t="4"] { border-color: var(--to4); color: var(--to4); box-shadow: inset 0 0 15px rgba(116, 238, 21, 0.2); }
+        .t1 { color: var(--neon-blue); border-color: var(--neon-blue); }
+        .t2 { color: var(--neon-pink); border-color: var(--neon-pink); }
+        .t3 { color: var(--neon-green); border-color: var(--neon-green); }
+        .t4 { color: var(--neon-yellow); border-color: var(--neon-yellow); }
 
-        .team-card:active { transform: scale(0.95); background: rgba(255,255,255,0.1); }
-
-        /* Main App Appearance */
-        #main-app { display: none; }
+        .team-btn:active { background: white; color: black; transform: scale(0.95); }
 
         header {
-            background: rgba(2, 6, 23, 0.9); backdrop-filter: blur(10px);
-            padding: 15px 20px; display: flex; justify-content: space-between; 
-            align-items: center; border-bottom: 1px solid rgba(255,255,255,0.1);
-            position: sticky; top: 0; z-index: 100;
+            width: 100%;
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 20px; padding-bottom: 15px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
         }
 
-        .logo-text { font-weight: 900; font-size: 1.5em; color: #fff; text-shadow: 0 0 10px rgba(255,255,255,0.3); }
-        .status-pill { padding: 6px 15px; border-radius: 50px; font-weight: 800; font-size: 0.85em; }
-
-        .btn-action-small {
-            background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.2);
-            color: var(--white); padding: 8px 12px; border-radius: 12px;
-            cursor: pointer; font-weight: bold; font-size: 0.75em;
+        .game-card {
+            background: rgba(30, 41, 59, 0.7);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 18px; padding: 20px; margin-bottom: 15px;
+            width: 100%; position: relative; overflow: hidden;
         }
 
-        .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+        .points-badge { font-size: 0.75em; background: rgba(255,255,255,0.1); padding: 4px 8px; border-radius: 6px; color: var(--neon-green); border: 1px solid var(--neon-green); }
 
-        .rankings {
-            background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.1);
-            padding: 20px; border-radius: 30px; margin-bottom: 25px;
-        }
+        .card-locked { opacity: 0.5; background: rgba(15, 23, 42, 0.5); border: 1px dashed #64748b; }
+        .coming-soon-badge { position: absolute; top: 10px; right: -30px; background: #ef4444; color: white; padding: 5px 30px; font-size: 0.6em; font-weight: 900; transform: rotate(45deg); }
 
-        .bar-container { margin-bottom: 12px; }
-        .bar-info { display: flex; justify-content: space-between; margin-bottom: 4px; font-size: 0.85em; font-weight: bold; }
-        .bar-bg { background: rgba(255,255,255,0.05); height: 12px; border-radius: 10px; overflow: hidden; }
-        .bar-fill { height: 100%; width: 0%; transition: width 1s ease-in-out; }
+        .start-btn { width: 100%; padding: 14px; border-radius: 12px; border: none; font-weight: 800; cursor: pointer; margin-top: 10px; background: white; color: #020617; font-size: 1em; }
+        .stop-btn { width: 100%; padding: 10px; border-radius: 10px; border: 1px solid #475569; background: transparent; color: #94a3b8; font-weight: 700; cursor: pointer; margin-top: 15px; font-size: 0.8em; }
 
-        .card { 
-            background: rgba(255,255,255,0.04); border-radius: 30px; padding: 25px; 
-            border: 1px solid rgba(255,255,255,0.06);
-            text-align: center; margin-bottom: 25px; position: relative; overflow: hidden;
-        }
+        .game-input { width: 100%; background: #0f172a; border: 1px solid #334155; color: white; padding: 12px; font-size: 1.5em; text-align: center; border-radius: 10px; margin-bottom: 10px; outline: none; }
+        .opt-btn { width: 100%; padding: 14px; margin-bottom: 10px; background: rgba(255,255,255,0.05); color: #cbd5e1; border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; text-align: left; font-weight: 600; cursor: pointer; }
+        .opt-btn:active { background: var(--neon-blue); color: black; }
 
-        .subject-icon { font-size: 2.8em; margin-bottom: 10px; display: block; }
-
-        .game-area {
-            background: rgba(0,0,0,0.4); border-radius: 20px; padding: 20px;
-            margin-top: 15px; min-height: 180px; display: flex; flex-direction: column; justify-content: center;
-        }
-.question-text { font-size: 1.5em; font-weight: 900; margin-bottom: 15px; }
-        
-        input { 
-            width: 100%; padding: 12px; border: 1px solid rgba(255,255,255,0.2); 
-            background: rgba(0,0,0,0.3); color: white;
-            border-radius: 15px; font-size: 1.8em; text-align: center; outline: none;
-        }
-
-        .opt-btn { 
-            background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); 
-            padding: 14px; margin: 6px 0; width: 100%; border-radius: 15px; 
-            font-weight: 800; color: white; cursor: pointer; font-size: 1em;
-        }
-
-        .btn-start { 
-            background: var(--white); color: var(--dark); border: none; 
-            padding: 12px 35px; border-radius: 50px; font-weight: 900; cursor: pointer;
-        }
-
-        #toast {
-            position: fixed; top: 90px; left: 50%; transform: translateX(-50%);
-            padding: 10px 25px; background: rgba(255,255,255,0.95); color: black;
-            border-radius: 50px; font-weight: 900; display: none; z-index: 10000;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5); font-size: 0.85em;
-        }
-
-        .card.upcoming { opacity: 0.4; }
-        .badge-soon {
-            position: absolute; top: 12px; right: -35px;
-            background: #475569; color: white; padding: 4px 40px;
-            transform: rotate(45deg); font-size: 0.6em; font-weight: 900;
-        }
+        .progress-bg { height: 10px; background: rgba(0,0,0,0.3); border-radius: 5px; margin-top: 5px; }
+        .progress-fill { height: 100%; border-radius: 5px; transition: width 0.5s ease-out; }
+#toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: white; color: black; padding: 12px 25px; border-radius: 30px; font-weight: 900; font-size: 0.9em; display: none; z-index: 10000; box-shadow: 0 5px 20px rgba(0,0,0,0.5); }
     </style>
 </head>
 <body>
 
-    <div id="toast"></div>
+    <div id="toast">Thông báo</div>
 
-    <div id="selector-screen">
-        <div class="selector-box">
-            <h1 style="color: white; margin: 0; font-size: 3em; font-weight: 900;">7A4</h1>
-            <p style="color: var(--to1); margin: 0 0 15px 0; font-weight: 900; letter-spacing: 2px; font-size: 0.7em;">GALAXY MISSION</p>
-            
-            <div class="mobile-warning">⚠️ Chỉ hoạt động trên điện thoại</div>
-            
-            <p style="color: #94a3b8; font-weight: bold; font-size: 0.85em;">CHỌN PHI ĐỘI</p>
-            
+    <div id="selector-screen" class="screen">
+        <div class="glass-box" style="text-align: center;">
+            <h1 style="font-size: 3em; margin: 0; color: white;">7A4</h1>
+            <p style="color: #94a3b8; letter-spacing: 3px; margin-top: -5px; margin-bottom: 25px; font-size: 0.8em; font-weight: bold;">GALAXY MISSION</p>
+            <div style="text-align: left; margin-bottom: 12px; font-size: 0.8em; color: #64748b; font-weight: bold;">CHỌN PHI ĐỘI:</div>
             <div class="grid-teams">
-                <button class="team-card" data-t="1" onclick="initTeam('Tổ 1')">TỔ 1</button>
-                <button class="team-card" data-t="2" onclick="initTeam('Tổ 2')">TỔ 2</button>
-                <button class="team-card" data-t="3" onclick="initTeam('Tổ 3')">TỔ 3</button>
-                <button class="team-card" data-t="4" onclick="initTeam('Tổ 4')">TỔ 4</button>
+                <button class="team-btn t1" onclick="app.join('Tổ 1')">TỔ 1</button>
+                <button class="team-btn t2" onclick="app.join('Tổ 2')">TỔ 2</button>
+                <button class="team-btn t3" onclick="app.join('Tổ 3')">TỔ 3</button>
+                <button class="team-btn t4" onclick="app.join('Tổ 4')">TỔ 4</button>
             </div>
         </div>
     </div>
 
-    <div id="main-app">
+    <div id="main-app" class="screen">
         <header>
-            <div class="logo-text">7A4 MISSION</div>
-            <div style="display: flex; align-items: center; gap: 10px;">
-                <span id="team-tag" class="status-pill"></span>
-                <button class="btn-action-small" onclick="switchTeam()">Đổi Tổ</button>
+            <div style="font-family:'Orbitron'; font-weight: 900; font-size: 1.1em;">MISSION CONTROL</div>
+            <div style="display: flex; gap: 8px; align-items: center;">
+                <span id="user-badge" style="font-weight: bold; font-size: 0.8em; padding: 5px 12px; border-radius: 20px; background: rgba(255,255,255,0.1);">Team</span>
+                <button onclick="app.exit()" style="background:transparent; border: 1px solid #475569; color: #94a3b8; padding: 6px 12px; border-radius: 8px; font-size: 0.7em;">Thoát</button>
             </div>
         </header>
 
-        <div class="container">
-            <div class="rankings">
-<h3 style="margin:0; text-align: center; font-size: 1em;">📊 THỨ HẠNG PHI ĐỘI</h3>
-                <div id="rank-bars" style="margin-top: 15px;"></div>
-            </div>
+        <div class="glass-box" style="padding: 20px;">
+            <h3 style="margin: 0 0 15px 0; font-size: 0.9em; color: #facc15;">🏆 BẢNG XẾP HẠNG</h3>
+            <div id="rank-container"></div>
+        </div>
 
-            <div class="card">
-                <span class="subject-icon">📐</span>
-                <h3>Toán Phản Xạ</h3>
-                <p style="color:var(--gray); font-size: 0.8em;">Cộng, Trừ, Nhân, Chia (+5đ)</p>
-                <div id="math-start-ui"><button class="btn-start" onclick="startMath()">Khai hỏa</button></div>
-                <div id="math-game-ui" class="game-area" style="display:none">
-                    <div id="math-q" class="question-text"></div>
-                    <input type="number" id="math-input" inputmode="numeric" placeholder="?">
-                </div>
+        <!-- MATH GAME -->
+        <div class="game-card" id="math-card">
+            <div class="game-header" style="display: flex; justify-content: space-between;">
+                <h3 style="margin:0; font-size: 1em;">🚀 Toán Học</h3>
+                <span class="points-badge">+5 ĐIỂM</span>
             </div>
+            <div id="math-start-view">
+                <p style="font-size: 0.8em; color: #94a3b8; margin: 10px 0;">Cộng, Trừ, Nhân, Chia, Số mũ.</p>
+                <button class="start-btn" onclick="mathGame.start()">LUYỆN TẬP</button>
+            </div>
+            <div id="math-play-view" style="display: none;">
+                <div id="math-q" style="font-size: 2em; text-align: center; font-weight: 900; margin: 20px 0; font-family: 'Orbitron'; color: var(--neon-blue);">?</div>
+<input type="number" id="math-input" class="game-input" placeholder="..." inputmode="numeric">
+                <button class="start-btn" style="background: var(--neon-blue); color: black;" onclick="mathGame.check()">XÁC NHẬN</button>
+                <button class="stop-btn" onclick="mathGame.stop()">DỪNG LẠI</button>
+            </div>
+        </div>
 
-            <div class="card">
-                <span class="subject-icon">🌍</span>
-                <h3>Tiếng Anh Master</h3>
-                <p style="color:var(--gray); font-size: 0.8em;">Từ vựng hành động (+10đ)</p>
-                <div id="en-start-ui"><button class="btn-start" onclick="startEn()">Bắt đầu</button></div>
-                <div id="en-game-ui" class="game-area" style="display:none">
-                    <di
+        <!-- ENGLISH GAME -->
+        <div class="game-card" id="en-card">
+            <div class="game-header" style="display: flex; justify-content: space-between;">
+                <h3 style="margin:0; font-size: 1em;">🌍 Anh Văn</h3>
+                <span class="points-badge" style="color:var(--neon-pink); border-color:var(--neon-pink)">+10 ĐIỂM</span>
+            </div>
+            <div id="en-start-view">
+                <p style="font-size: 0.8em; color: #94a3b8; margin: 10px 0;">Ngữ pháp (thì) & Từ vựng mới.</p>
+                <button class="start-btn" onclick="enGame.start()">LUYỆN TẬP</button>
+            </div>
+            <div id="en-play-view" style="display: none;">
+                <p id="en-q" style="font-weight: bold; text-align: center; font-size: 1.1em; margin-bottom: 15px; min-height: 2.5em;">Question?</p>
+                <div id="en-opts"></div>
+                <button class="stop-btn" onclick="enGame.stop()">DỪNG LẠI</button>
+            </div>
+        </div>
