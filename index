@@ -1,0 +1,1069 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+  <title>7A4 GENIUS — GALAXY MISSION</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --to1:#00d2ff; /* Cyan Neon */
+      --to2:#ff007f; /* Pink Neon */
+      --to3:#a200ff; /* Purple Neon */
+      --to4:#39ff14; /* Green Neon */
+      --dark:#020617;
+      --deep:#0f172a;
+      --white:#fff;
+      --gray:#94a3b8;
+      --glass: rgba(255,255,255,0.06);
+      --border: rgba(255,255,255,0.12);
+    }
+
+    *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+    body{
+      margin:0;
+      font-family:'Nunito',sans-serif;
+      color:var(--white);
+      min-height:100vh;
+      overflow-x:hidden;
+      background-color: var(--dark);
+      background-image:
+        radial-gradient(white, rgba(255,255,255,.2) 1px, transparent 20px),
+        radial-gradient(white, rgba(255,255,255,.1) 1px, transparent 40px),
+        linear-gradient(to bottom, #020617, #1e1b4b);
+      background-size: 200px 200px, 300px 300px, 100% 100%;
+    }
+
+    /* toast */
+    #toast{
+      position:fixed; top:110px; left:50%; transform:translateX(-50%);
+      padding:14px 26px;
+      background:white; color:black;
+      border-radius:999px;
+      font-weight:900;
+      display:none;
+      z-index:99999;
+      box-shadow:0 0 30px rgba(255,255,255,.5);
+    }
+
+    /* selector screen */
+    #selector-screen{
+      position:fixed; inset:0;
+      z-index:9999;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      padding:20px;
+      text-align:center;
+      background:
+        radial-gradient(circle at center, rgba(30,27,75,0.8), var(--dark)),
+        url('https://images.unsplash.com/photo-1462331940025-496dfbfc7564?q=80&w=1200&auto=format&fit=crop');
+      background-size:cover;
+      background-position:center;
+    }
+
+    .selector-box{
+      width:100%;
+      max-width:520px;
+      padding:42px 30px;
+      border-radius:40px;
+      border:1px solid rgba(255,255,255,0.1);
+      background: rgba(15,23,42,0.72);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      box-shadow:0 0 40px rgba(162,0,255,.35);
+    }
+
+    .grid-teams{
+      display:grid;
+      grid-template-columns:repeat(2,1fr);
+      gap:18px;
+      margin-top:26px;
+    }
+
+    .team-card{
+      padding:28px 10px;
+      border:none;
+      border-radius:24px;
+      color:white;
+      font-size:1.25em;
+      font-weight:900;
+      cursor:pointer;
+      transition: all .28s cubic-bezier(.175,.885,.32,1.275);
+      box-shadow:0 0 15px rgba(255,255,255,0.12);
+      text-transform:uppercase;
+      letter-spacing:1px;
+    }
+    .team-card:hover{ transform:scale(1.07); filter:brightness(1.2); box-shadow:0 0 25px currentColor; }
+    .team-card:active{ transform:scale(.95); }
+
+    /* main app */
+    #main-app{ display:none; }
+
+    header{
+      position:sticky; top:0; z-index:100;
+      padding:14px 18px;
+      display:flex; justify-content:space-between; align-items:center;
+      background: rgba(2,6,23,0.9);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+    .logo-text{
+      font-weight:900;
+      font-size:1.5em;
+      text-shadow:0 0 15px var(--to3);
+    }
+    .status-pill{
+      padding:8px 14px;
+      border-radius:999px;
+      font-weight:900;
+      box-shadow:0 0 10px rgba(255,255,255,0.2);
+      border:1px solid rgba(255,255,255,0.18);
+      background: rgba(255,255,255,0.08);
+    }
+    .btn-action-small{
+      background: rgba(255,255,255,0.08);
+      border:1px solid rgba(255,255,255,0.18);
+      color:var(--white);
+      padding:8px 12px;
+      border-radius:14px;
+      cursor:pointer;
+      font-weight:900;
+      font-size:.85em;
+      transition:.2s;
+    }
+    .btn-action-small:hover{ background: rgba(255,255,255,0.18); }
+
+    .container{ max-width:920px; margin:0 auto; padding:20px; }
+
+    .rankings{
+      background: rgba(255,255,255,0.03);
+      border:1px solid rgba(255,255,255,0.1);
+      padding:24px;
+      border-radius:35px;
+      margin-bottom:26px;
+      box-shadow: inset 0 0 20px rgba(0,0,0,0.5);
+    }
+    .bar-container{ margin-bottom:16px; }
+    .bar-info{
+      display:flex; justify-content:space-between;
+      margin-bottom:6px;
+      font-weight:900;
+      font-size:.95em;
+      color:#e2e8f0;
+    }
+    .bar-bg{
+      background: rgba(255,255,255,0.05);
+      height:16px;
+      border-radius:20px;
+      overflow:hidden;
+      border:1px solid rgba(255,255,255,0.08);
+    }
+    .bar-fill{
+      height:100%;
+      width:0%;
+      transition: width 1.2s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap:18px;
+    }
+
+    .card{
+      grid-column: span 12;
+      background: rgba(255,255,255,0.05);
+      border:1px solid rgba(255,255,255,0.08);
+      border-radius:35px;
+      padding:26px;
+      text-align:center;
+      position:relative;
+      overflow:hidden;
+      transition: transform .25s;
+    }
+    .card:hover{ transform: translateY(-4px); background: rgba(255,255,255,0.08); }
+
+    @media(min-width: 860px){
+      .card.half{ grid-column: span 6; }
+    }
+
+    .subject-icon{
+      font-size:3.2em;
+      margin-bottom:12px;
+      display:block;
+      filter: drop-shadow(0 0 10px rgba(255,255,255,0.3));
+    }
+
+    .badge-soon{
+      position:absolute; top:14px; right:-42px;
+      background: var(--gray);
+      color:white;
+      padding:6px 50px;
+      transform: rotate(45deg);
+      font-size:.75em;
+      font-weight:900;
+      opacity:.9;
+    }
+    .upcoming{
+      opacity:.65;
+      border:1px dashed rgba(255,255,255,0.22);
+    }
+
+    .btn-start{
+      background: linear-gradient(45deg, var(--to3), var(--to1));
+      color:white;
+      border:none;
+      padding:14px 42px;
+      border-radius:999px;
+      font-weight:900;
+      cursor:pointer;
+      font-size:1.05em;
+      box-shadow:0 5px 20px rgba(162,0,255,0.4);
+      transition:.25s;
+    }
+    .btn-start:hover{ transform:scale(1.05); box-shadow:0 8px 25px rgba(162,0,255,0.6); }
+
+    .btn-ghost{
+      background: rgba(255,255,255,0.08);
+      border:1px solid rgba(255,255,255,0.18);
+      color:white;
+      padding:12px 18px;
+      border-radius:16px;
+      font-weight:900;
+      cursor:pointer;
+      transition:.2s;
+    }
+    .btn-ghost:hover{ background: rgba(255,255,255,0.16); }
+
+    .game-area{
+      background: rgba(0,0,0,0.38);
+      border-radius:24px;
+      padding:18px;
+      margin-top:16px;
+      border:1px solid rgba(255,255,255,0.1);
+      text-align:left;
+    }
+
+    input, textarea{
+      width:100%;
+      padding:14px 16px;
+      border:2px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.06);
+      color:white;
+      border-radius:18px;
+      font-size:1.05em;
+      outline:none;
+      transition:.25s;
+    }
+    input:focus, textarea:focus{
+      border-color: var(--to1);
+      box-shadow: 0 0 20px rgba(0,210,255,0.25);
+    }
+
+    .row{ display:flex; gap:10px; flex-wrap:wrap; }
+    .row > *{ flex:1; min-width:160px; }
+
+    .tag{
+      display:inline-flex; align-items:center; gap:8px;
+      padding:8px 12px;
+      border-radius:999px;
+      background: rgba(255,255,255,0.08);
+      border:1px solid rgba(255,255,255,0.14);
+      font-weight:900;
+      font-size:.92em;
+    }
+
+    .muted{ color: var(--gray); font-weight:800; }
+    .big-title{ font-size:1.25em; font-weight:900; margin:0 0 8px 0; }
+    .hr{ height:1px; background: rgba(255,255,255,0.1); margin:14px 0; }
+
+    .link-btn{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:10px;
+      padding:14px 16px;
+      border-radius:18px;
+      border:1px solid rgba(255,255,255,0.14);
+      background: rgba(255,255,255,0.06);
+      text-decoration:none;
+      color:white;
+      font-weight:900;
+      transition:.2s;
+    }
+    .link-btn:hover{ transform: translateY(-2px); background: rgba(255,255,255,0.10); }
+
+    .chip{
+      font-weight:900;
+      padding:6px 10px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,0.18);
+      background: rgba(255,255,255,0.08);
+      font-size:.85em;
+      white-space:nowrap;
+    }
+
+    .log{
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size:.92em;
+      line-height:1.4;
+      padding:12px;
+      border-radius:16px;
+      border:1px solid rgba(255,255,255,0.14);
+      background: rgba(0,0,0,0.35);
+      min-height:120px;
+      white-space:pre-wrap;
+    }
+
+    .pill-danger{ background: rgba(255,0,127,0.12); border:1px solid rgba(255,0,127,0.35); }
+    .pill-ok{ background: rgba(57,255,20,0.12); border:1px solid rgba(57,255,20,0.35); }
+    .pill-info{ background: rgba(0,210,255,0.12); border:1px solid rgba(0,210,255,0.35); }
+  </style>
+</head>
+
+<body>
+  <div id="toast"></div>
+
+  <!-- MÀN HÌNH CHỌN TỔ -->
+  <div id="selector-screen">
+    <div class="selector-box">
+      <h1 style="margin:0 0 6px 0;font-size:3.3em;font-weight:900;">7A4</h1>
+      <p style="margin:0;color:var(--to1);font-weight:900;letter-spacing:4px;font-size:.82em;">
+        GALAXY MISSION CONTROL
+      </p>
+
+      <p style="color:#cbd5e1;font-weight:900;margin-top:26px;margin-bottom:0;">
+        XÁC NHẬN PHI ĐỘI
+      </p>
+
+      <div class="grid-teams">
+        <button type="button" class="team-card" onclick="initTeam('Tổ 1')" style="background:var(--to1); box-shadow:0 0 20px rgba(0,210,255,0.3)">TỔ 1</button>
+        <button type="button" class="team-card" onclick="initTeam('Tổ 2')" style="background:var(--to2); box-shadow:0 0 20px rgba(255,0,127,0.3)">TỔ 2</button>
+        <button type="button" class="team-card" onclick="initTeam('Tổ 3')" style="background:var(--to3); box-shadow:0 0 20px rgba(162,0,255,0.3)">TỔ 3</button>
+        <button type="button" class="team-card" onclick="initTeam('Tổ 4')" style="background:var(--to4); box-shadow:0 0 20px rgba(57,255,20,0.3); color:#04120a">TỔ 4</button>
+      </div>
+
+      <p class="muted" style="margin-top:18px;font-weight:900;">
+        ⚡ Điểm sẽ tự reset mỗi tuần (tự động)
+      </p>
+    </div>
+  </div>
+
+  <!-- APP CHÍNH -->
+  <div id="main-app">
+    <header>
+      <div class="logo-text">7A4 GENIUS HUB</div>
+      <div style="display:flex;align-items:center;gap:10px;">
+        <span id="team-tag" class="status-pill"></span>
+        <button class="btn-action-small" onclick="switchTeam()">Đổi Tổ</button>
+      </div>
+    </header>
+
+    <div class="container">
+      <!-- BẢNG XẾP HẠNG -->
+      <div class="rankings">
+        <div class="row" style="align-items:center; justify-content:space-between;">
+          <div style="flex:2; min-width:240px;">
+            <h3 style="margin:0; letter-spacing:1px;">🛸 BẢNG XẾP HẠNG PHI HÀNH ĐOÀN</h3>
+            <div class="muted" style="margin-top:6px;">
+              Mỗi tuần sẽ reset điểm 1 lần (tự động).
+            </div>
+          </div>
+          <div style="flex:1; min-width:220px;">
+            <div class="tag pill-info" id="week-tag">📅 Tuần: ...</div>
+          </div>
+        </div>
+
+        <div id="rank-bars" style="margin-top:20px;"></div>
+      </div>
+
+      <div class="grid">
+        <!-- TIKTOK -->
+        <div class="card half">
+          <span class="subject-icon">📱</span>
+          <h3 style="margin:0 0 6px 0;">Kênh TikTok 7A4</h3>
+          <p class="muted" style="margin:0 0 16px 0;">Follow để update drama + highlight 😂</p>
+
+          <a class="link-btn" href="https://www.tiktok.com/@a4.tvl.2025.2026" target="_blank" rel="noopener">
+            <span>🚀 @a4.tvl.2025.2026</span>
+            <span class="chip">Mở</span>
+          </a>
+
+          <div style="height:10px"></div>
+
+          <a class="link-btn" href="https://www.tiktok.com/@7a4.tvl.2025.2026" target="_blank" rel="noopener">
+            <span>🌌 @7a4.tvl.2025.2026</span>
+            <span class="chip">Mở</span>
+          </a>
+        </div>
+
+        <!-- TOÁN -->
+        <div class="card half">
+          <span class="subject-icon">📐</span>
+          <h3 style="margin:0 0 6px 0;">Toán Phản Xạ</h3>
+          <p class="muted" style="margin:0 0 14px 0;">Trả lời đúng +5 điểm cho tổ bạn</p>
+
+          <div id="math-start-ui">
+            <button class="btn-start" onclick="startMath()">Khai hoả</button>
+          </div>
+
+          <div id="math-game-ui" class="game-area" style="display:none;">
+            <div class="tag pill-info" style="margin-bottom:10px;">📌 Câu hỏi</div>
+            <div id="math-q" style="font-size:1.6em;font-weight:900;margin-bottom:12px;"></div>
+
+            <div class="row">
+              <input type="number" id="math-input" inputmode="numeric" placeholder="Nhập đáp án..." />
+              <button class="btn-ghost" onclick="submitMath()">Trả lời</button>
+            </div>
+
+            <div class="hr"></div>
+            <button class="btn-action-small" onclick="stopMath()">Thoát</button>
+          </div>
+        </div>
+
+        <!-- VUA NỐI TỪ -->
+        <div class="card">
+          <span class="subject-icon">👑</span>
+          <h3 style="margin:0 0 6px 0;">VUA NỐI TỪ — Galaxy Arena</h3>
+          <p class="muted" style="margin:0 0 16px 0;">
+            Luật như noitu.pro/solo: từ sau phải bắt đầu bằng chữ cuối của từ trước.
+            Ví dụ: <b>đồ ăn</b> → phải nối bằng từ bắt đầu chữ <b>ăn</b>.
+          </p>
+
+          <div class="row" style="margin-bottom:10px;">
+            <button class="btn-start" onclick="openWordMode('ai')">🤖 Solo với Robot AI</button>
+            <button class="btn-ghost" onclick="openWordMode('online')">🌐 Online 1vs1 (P2P)</button>
+          </div>
+
+          <div id="word-ui" class="game-area" style="display:none;">
+            <div class="row" style="align-items:center;">
+              <div class="tag pill-info" id="word-mode-tag">Chế độ: ...</div>
+              <div class="tag" id="word-rule-tag">Luật: ...</div>
+              <button class="btn-action-small" onclick="closeWord()">Đóng</button>
+            </div>
+
+            <div class="hr"></div>
+
+            <div class="row" style="margin-bottom:10px;">
+              <div class="tag" id="word-last">Từ hiện tại: (chưa có)</div>
+              <div class="tag pill-ok" id="word-score">+0 điểm</div>
+            </div>
+
+            <div class="row">
+              <input id="word-input" placeholder="Nhập từ để nối..." autocomplete="off" />
+              <button class="btn-ghost" onclick="submitWord()">Gửi</button>
+            </div>
+
+            <div class="hr"></div>
+
+            <div class="row" style="margin-bottom:10px;">
+              <button class="btn-ghost" onclick="wordHint()">💡 Gợi ý</button>
+              <button class="btn-ghost" onclick="wordGiveUp()">🏳️ Xin thua</button>
+              <button class="btn-ghost" onclick="wordRestart()">🔄 Chơi lại</button>
+            </div>
+
+            <!-- ONLINE -->
+            <div id="online-ui" style="display:none;">
+              <div class="hr"></div>
+              <div class="tag pill-info">🌐 Online 1vs1 (P2P)</div>
+              <p class="muted" style="margin:10px 0 0 0;">
+                Vì bạn upload HTML lên web tĩnh, mình làm online kiểu “phòng bằng link” dùng WebRTC.
+                Bạn tạo phòng → gửi link cho bạn khác mở là chơi được.
+              </p>
+              <div class="row" style="margin-top:10px;">
+                <button class="btn-start" onclick="onlineCreateRoom()">Tạo phòng</button>
+                <button class="btn-ghost" onclick="onlineJoinRoom()">Vào phòng</button>
+              </div>
+
+              <div class="hr"></div>
+              <div class="muted">Mã phòng / link:</div>
+              <textarea id="online-room" rows="3" placeholder="Sẽ hiện link ở đây..."></textarea>
+            </div>
+
+            <div class="hr"></div>
+            <div class="tag">📜 Lịch sử</div>
+            <div id="word-log" class="log"></div>
+          </div>
+        </div>
+
+        <!-- SẮP CÓ -->
+        <div class="card half upcoming">
+          <div class="badge-soon">SẮP CÓ</div>
+          <span class="subject-icon">🧩</span>
+          <h3 style="margin:0 0 6px 0;">Đố vui thành viên trong lớp</h3>
+          <p class="muted" style="margin:0;">
+            Ai là người... (siêu lầy / siêu chăm / hay ngủ gật) 😭
+          </p>
+        </div>
+
+        <div class="card half upcoming">
+          <div class="badge-soon">SẮP CÓ</div>
+          <span class="subject-icon">🇬🇧</span>
+          <h3 style="margin:0 0 6px 0;">Tiếng Anh</h3>
+          <p class="muted" style="margin:0;">
+            Mini quiz từ vựng + phát âm + câu hỏi nhanh
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<script>
+/* =========================
+   UTIL
+========================= */
+function toast(msg){
+  const t = document.getElementById("toast");
+  t.textContent = msg;
+  t.style.display = "block";
+  clearTimeout(window.__toastTimer);
+  window.__toastTimer = setTimeout(()=>t.style.display="none", 1800);
+}
+
+function clamp(n,min,max){ return Math.max(min, Math.min(max,n)); }
+
+function normalizeWord(s){
+  return (s||"")
+    .toLowerCase()
+    .trim()
+    .replace(/\s+/g,' ')
+    .replace(/[.,!?;:()"']/g,'');
+}
+
+function getLastChar(word){
+  word = normalizeWord(word);
+  if(!word) return "";
+  // lấy ký tự cuối cùng (bỏ khoảng trắng)
+  return word[word.length-1];
+}
+
+function getFirstChar(word){
+  word = normalizeWord(word);
+  if(!word) return "";
+  return word[0];
+}
+
+/* =========================
+   WEEKLY RESET SCORE
+========================= */
+const STORAGE_KEY = "7a4_galaxy_scores_v1";
+const DEFAULT_SCORES = { "Tổ 1":0, "Tổ 2":0, "Tổ 3":0, "Tổ 4":0 };
+
+function getWeekId(){
+  // tuần ISO đơn giản (theo thứ 2)
+  const d = new Date();
+  const date = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+  const dayNum = date.getUTCDay() || 7;
+  date.setUTCDate(date.getUTCDate() + 4 - dayNum);
+  const yearStart = new Date(Date.UTC(date.getUTCFullYear(),0,1));
+  const weekNo = Math.ceil((((date - yearStart) / 86400000) + 1) / 7);
+  return `${date.getUTCFullYear()}-W${weekNo}`;
+}
+
+function loadScores(){
+  const raw = localStorage.getItem(STORAGE_KEY);
+  if(!raw){
+    return { week: getWeekId(), scores: {...DEFAULT_SCORES} };
+  }
+  try{
+    const obj = JSON.parse(raw);
+    if(!obj.week || !obj.scores) throw 0;
+    return obj;
+  }catch(e){
+    return { week: getWeekId(), scores: {...DEFAULT_SCORES} };
+  }
+}
+
+function saveScores(data){
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+}
+
+function weeklyResetIfNeeded(){
+  let data = loadScores();
+  const currentWeek = getWeekId();
+  if(data.week !== currentWeek){
+    data.week = currentWeek;
+    data.scores = {...DEFAULT_SCORES};
+    saveScores(data);
+    toast("📅 Sang tuần mới! Điểm đã reset ✨");
+  }
+  document.getElementById("week-tag").textContent = "📅 Tuần: " + data.week;
+  return data;
+}
+
+function addScore(team, amount){
+  const data = weeklyResetIfNeeded();
+  data.scores[team] = (data.scores[team]||0) + amount;
+  saveScores(data);
+  renderRanking();
+}
+
+function renderRanking(){
+  const data = weeklyResetIfNeeded();
+  const scores = data.scores;
+
+  const max = Math.max(1, ...Object.values(scores));
+  const colors = {
+    "Tổ 1":"var(--to1)",
+    "Tổ 2":"var(--to2)",
+    "Tổ 3":"var(--to3)",
+    "Tổ 4":"var(--to4)",
+  };
+
+  const wrap = document.getElementById("rank-bars");
+  wrap.innerHTML = "";
+
+  Object.keys(scores).forEach(team=>{
+    const val = scores[team];
+    const pct = clamp((val/max)*100, 0, 100);
+
+    const div = document.createElement("div");
+    div.className = "bar-container";
+    div.innerHTML = `
+      <div class="bar-info">
+        <span>${team}</span>
+        <span>${val} điểm</span>
+      </div>
+      <div class="bar-bg">
+        <div class="bar-fill" style="background:${colors[team]}; width:${pct}%"></div>
+      </div>
+    `;
+    wrap.appendChild(div);
+  });
+}
+
+/* =========================
+   TEAM SELECTOR
+========================= */
+let currentTeam = null;
+
+function initTeam(teamName){
+  currentTeam = teamName;
+  localStorage.setItem("team", teamName);
+
+  const tag = document.getElementById("team-tag");
+  tag.textContent = teamName;
+
+  // màu theo tổ
+  const colorMap = {"Tổ 1":"var(--to1)","Tổ 2":"var(--to2)","Tổ 3":"var(--to3)","Tổ 4":"var(--to4)"};
+  tag.style.background = "rgba(255,255,255,0.08)";
+  tag.style.borderColor = "rgba(255,255,255,0.18)";
+  tag.style.boxShadow = "0 0 18px rgba(255,255,255,0.18)";
+  tag.style.color = "#fff";
+  tag.style.textShadow = `0 0 18px ${colorMap[teamName]}`;
+
+  document.getElementById("selector-screen").style.display = "none";
+  document.getElementById("main-app").style.display = "block";
+
+  weeklyResetIfNeeded();
+  renderRanking();
+  toast("🚀 Đã vào căn cứ: " + teamName);
+}
+
+function switchTeam(){
+  localStorage.removeItem("team");
+  currentTeam = null;
+  document.getElementById("main-app").style.display = "none";
+  document.getElementById("selector-screen").style.display = "flex";
+}
+
+/* =========================
+   MATH GAME
+========================= */
+let mathA=0, mathB=0;
+function startMath(){
+  document.getElementById("math-start-ui").style.display = "none";
+  document.getElementById("math-game-ui").style.display = "block";
+  nextMath();
+}
+function stopMath(){
+  document.getElementById("math-start-ui").style.display = "block";
+  document.getElementById("math-game-ui").style.display = "none";
+}
+function nextMath(){
+  mathA = Math.floor(Math.random()*50)+1;
+  mathB = Math.floor(Math.random()*50)+1;
+  document.getElementById("math-q").textContent = `${mathA} + ${mathB} = ?`;
+  const inp = document.getElementById("math-input");
+  inp.value = "";
+  inp.focus();
+}
+function submitMath(){
+  if(!currentTeam){ toast("Bạn chưa chọn tổ!"); return; }
+  const ans = Number(document.getElementById("math-input").value);
+  if(ans === mathA + mathB){
+    toast("✅ Chính xác! +5 điểm");
+    addScore(currentTeam, 5);
+    nextMath();
+  }else{
+    toast("❌ Sai rồi!");
+  }
+}
+
+/* =========================
+   WORD CHAIN (NOI TU) - AI + ONLINE
+========================= */
+let wordMode = null; // "ai" | "online"
+let wordLast = "";   // từ hiện tại
+let wordUsed = new Set();
+let wordPoints = 0;
+let wordLog = [];
+
+const BOT_DELAY = 650;
+
+/**
+ * Bộ từ vựng mini offline để bot dùng + kiểm tra nhanh.
+ * (Không thể có "từ điển tiếng Việt chuẩn" 100% trong HTML tĩnh,
+ *  nhưng mình làm logic giống noitu.pro và có danh sách khá lớn.
+ * Bạn có thể tự mở rộng thêm.)
+ */
+const VOCAB = [
+  "đồ ăn","ăn vặt","ăn sáng","ăn trưa","ăn tối","ăn chơi","ăn hỏi","ăn cưới","ăn ngủ",
+  "bánh mì","mì gói","gà rán","cơm tấm","cơm rang","phở bò","bún bò","bún chả","trà sữa","sữa chua",
+  "cà phê","phim ảnh","ảnh selfie","yêu thương","thương nhớ","nhớ nhà","nhà bếp","bếp ga","ga tàu",
+  "tàu điện","đi học","học bài","bài tập","tập gym","gym bro","bro code","code gml","gml maker",
+  "maker game","game thủ","thủ môn","môn toán","toán học","học sinh","sinh nhật","nhật ký","ký ức",
+  "ức gà","gà luộc","luộc trứng","trứng rán","rán cá","cá kho","khoai tây","tây ban nha","nha khoa",
+  "khoa học","học hỏi","hỏi bài","bài hát","hát hay","hay ho","hoàng hôn","hôn lễ","lễ hội",
+  "hội nhóm","nhóm chat","chat gpt","gpt bot","bot ai","ai thông minh","minh hoạ","hoạ sĩ","sĩ tử",
+  "tử tế","tế nhị","nhịp tim","tim đập","đập hộp","hộp quà","quà tặng","tặng hoa","hoa hồng",
+  "hồng hào","hào quang","quang hợp","hợp tác","tác phẩm","phẩm chất","chất lượng","lượng giác",
+  "giác quan","quan hệ","hệ mặt trời","trời mưa","mưa rào","rào cản","cản trở","trở về","về nhà",
+  "nhà trường","trường lớp","lớp trưởng","trưởng nhóm","nhóm 7a4","a4 genius","genius hub"
+];
+
+// chuẩn hoá vocab
+const VOCAB_N = VOCAB.map(normalizeWord);
+
+function openWordMode(mode){
+  if(!currentTeam){ toast("Chọn tổ trước đã!"); return; }
+
+  wordMode = mode;
+  document.getElementById("word-ui").style.display = "block";
+  document.getElementById("online-ui").style.display = (mode==="online") ? "block" : "none";
+  document.getElementById("word-mode-tag").textContent = (mode==="ai")
+    ? "🤖 Chế độ: Solo với Robot AI"
+    : "🌐 Chế độ: Online 1vs1 (P2P)";
+
+  document.getElementById("word-rule-tag").textContent = "Luật: chữ cuối → chữ đầu";
+  wordRestart();
+}
+
+function closeWord(){
+  document.getElementById("word-ui").style.display = "none";
+}
+
+function wordRestart(){
+  wordUsed = new Set();
+  wordPoints = 0;
+  wordLog = [];
+  wordLast = "";
+
+  // mở màn bằng 1 từ random
+  const starter = VOCAB_N[Math.floor(Math.random()*VOCAB_N.length)];
+  wordLast = starter;
+  wordUsed.add(wordLast);
+  logAdd("Hệ thống", `Từ bắt đầu: "${wordLast}"`);
+
+  updateWordUI();
+  document.getElementById("word-input").value = "";
+  document.getElementById("word-input").focus();
+
+  if(wordMode==="ai"){
+    // cho người chơi đi trước
+    logAdd("Robot AI", "Bạn đi trước nhé 👀");
+  }else{
+    logAdd("Online", "Tạo phòng hoặc vào phòng để bắt đầu.");
+  }
+}
+
+function updateWordUI(){
+  document.getElementById("word-last").textContent = wordLast
+    ? `Từ hiện tại: "${wordLast}" (kết thúc: ${getLastChar(wordLast).toUpperCase()})`
+    : "Từ hiện tại: (chưa có)";
+  document.getElementById("word-score").textContent = `+${wordPoints} điểm`;
+
+  const logDiv = document.getElementById("word-log");
+  logDiv.textContent = wordLog.join("\n");
+  logDiv.scrollTop = logDiv.scrollHeight;
+}
+
+function logAdd(who, msg){
+  const t = new Date();
+  const hh = String(t.getHours()).padStart(2,'0');
+  const mm = String(t.getMinutes()).padStart(2,'0');
+  wordLog.push(`[${hh}:${mm}] ${who}: ${msg}`);
+  updateWordUI();
+}
+
+/**
+ * KIỂM TRA TỪ HỢP LỆ
+ * - không rỗng
+ * - không trùng
+ * - phải nối đúng chữ
+ * - phải nằm trong VOCAB (đóng vai trò "từ điển")
+ */
+function validateWord(word, expectedFirst){
+  const w = normalizeWord(word);
+
+  if(!w) return { ok:false, reason:"Bạn chưa nhập từ." };
+  if(w.length < 2) return { ok:false, reason:"Từ quá ngắn." };
+  if(wordUsed.has(w)) return { ok:false, reason:"Từ này đã dùng rồi." };
+
+  if(expectedFirst){
+    const first = getFirstChar(w);
+    if(first !== expectedFirst){
+      return { ok:false, reason:`Sai luật nối! Phải bắt đầu bằng chữ "${expectedFirst}".` };
+    }
+  }
+
+  // kiểm tra "từ điển"
+  if(!VOCAB_N.includes(w)){
+    return { ok:false, reason:"Từ này không có trong từ điển của hệ thống." };
+  }
+
+  return { ok:true, word:w };
+}
+
+function submitWord(){
+  if(!wordMode){ toast("Chưa mở chế độ nối từ!"); return; }
+  const input = document.getElementById("word-input");
+  const raw = input.value;
+
+  const expected = wordLast ? getLastChar(wordLast) : "";
+  const check = validateWord(raw, expected);
+
+  if(!check.ok){
+    toast("❌ " + check.reason);
+    logAdd("Hệ thống", "❌ " + check.reason);
+    return;
+  }
+
+  const w = check.word;
+  wordUsed.add(w);
+  wordLast = w;
+  input.value = "";
+  input.focus();
+
+  wordPoints += 3; // đúng +3 điểm
+  logAdd("Bạn", `✅ "${w}" (+3 điểm)`);
+
+  updateWordUI();
+
+  // cộng điểm cho tổ
+  addScore(currentTeam, 3);
+
+  // bot phản hồi
+  if(wordMode==="ai"){
+    setTimeout(botTurn, BOT_DELAY);
+  }else{
+    // online: gửi cho peer
+    onlineSendMove(w);
+  }
+}
+
+/* =========================
+   BOT AI (OFFLINE)
+   - chọn từ nối đúng
+   - ưu tiên từ chưa dùng
+   - có kiểm tra hợp lệ
+========================= */
+function botFindCandidates(lastWord){
+  const need = getLastChar(lastWord);
+  return VOCAB_N.filter(w => getFirstChar(w) === need && !wordUsed.has(w));
+}
+
+function botTurn(){
+  const candidates = botFindCandidates(wordLast);
+
+  if(candidates.length === 0){
+    logAdd("Robot AI", "😵 Tôi hết từ rồi... Bạn thắng!");
+    toast("🏆 Bạn thắng Robot!");
+    // thưởng thêm
+    addScore(currentTeam, 10);
+    logAdd("Hệ thống", "🏆 Thưởng +10 điểm cho tổ vì thắng Robot!");
+    return;
+  }
+
+  // "AI": chọn từ tối ưu hơn (chọn từ có nhiều đường đi tiếp theo)
+  let best = candidates[0];
+  let bestScore = -1;
+
+  for(const w of candidates){
+    const nextNeed = getLastChar(w);
+    const nextCount = VOCAB_N.filter(x => getFirstChar(x)===nextNeed && !wordUsed.has(x)).length;
+    const score = nextCount * 2 + Math.random(); // thêm random để bot không bị 1 màu
+    if(score > bestScore){
+      bestScore = score;
+      best = w;
+    }
+  }
+
+  wordUsed.add(best);
+  wordLast = best;
+  logAdd("Robot AI", `🤖 "${best}"`);
+
+  updateWordUI();
+}
+
+/* hint / give up */
+function wordHint(){
+  if(!wordLast){ toast("Chưa có từ để gợi ý."); return; }
+  const cand = botFindCandidates(wordLast);
+  if(cand.length===0){
+    toast("Không có gợi ý... bạn sắp thắng 🤭");
+    logAdd("Hệ thống", "Không có từ nối hợp lệ (theo từ điển).");
+    return;
+  }
+  const sample = cand[Math.floor(Math.random()*cand.length)];
+  toast("💡 Gợi ý: " + sample);
+  logAdd("Hệ thống", `💡 Gợi ý: "${sample}"`);
+}
+
+function wordGiveUp(){
+  toast("🏳️ Bạn đã xin thua!");
+  logAdd("Hệ thống", "🏳️ Bạn xin thua.");
+  if(wordMode==="ai"){
+    logAdd("Robot AI", "😎 Dễ quá!");
+  }
+}
+
+/* =========================
+   ONLINE P2P (WebRTC)
+   - tạo phòng / vào phòng bằng link
+   - trao đổi move đơn giản
+========================= */
+let pc=null, dc=null;
+let isHost=false;
+
+const RTC_CFG = { iceServers: [{ urls: "stun:stun.l.google.com:19302" }] };
+
+function getRoomFromHash(){
+  const h = location.hash.replace("#","");
+  if(!h) return null;
+  try{ return JSON.parse(atob(h)); }catch(e){ return null; }
+}
+function setRoomToHash(obj){
+  location.hash = btoa(JSON.stringify(obj));
+}
+
+function onlineCreateRoom(){
+  if(wordMode!=="online"){ return; }
+  isHost = true;
+
+  pc = new RTCPeerConnection(RTC_CFG);
+  dc = pc.createDataChannel("noitu");
+
+  dc.onopen = ()=> logAdd("Online", "✅ Kết nối thành công! Bắt đầu chơi.");
+  dc.onmessage = (e)=> onlineOnMessage(e.data);
+
+  pc.onicecandidate = ()=>{
+    if(pc.localDescription){
+      setRoomToHash({ type:"offer", sdp: pc.localDescription.sdp });
+      document.getElementById("online-room").value = location.href;
+    }
+  };
+
+  pc.createOffer().then(offer=>pc.setLocalDescription(offer));
+  logAdd("Online", "📌 Đang tạo phòng... gửi link cho bạn khác.");
+}
+
+function onlineJoinRoom(){
+  if(wordMode!=="online"){ return; }
+
+  const url = prompt("Dán link phòng (hoặc chỉ cần dán phần sau dấu #):");
+  if(!url) return;
+
+  // lấy hash
+  let hash = "";
+  if(url.includes("#")) hash = url.split("#")[1];
+  else hash = url;
+
+  let room=null;
+  try{ room = JSON.parse(atob(hash)); }catch(e){
+    toast("Link phòng không hợp lệ!");
+    return;
+  }
+  if(!room || room.type!=="offer"){ toast("Link phòng không đúng!"); return; }
+
+  isHost = false;
+
+  pc = new RTCPeerConnection(RTC_CFG);
+  pc.ondatachannel = (ev)=>{
+    dc = ev.channel;
+    dc.onopen = ()=> logAdd("Online", "✅ Kết nối thành công! Bắt đầu chơi.");
+    dc.onmessage = (e)=> onlineOnMessage(e.data);
+  };
+
+  pc.onicecandidate = ()=>{
+    if(pc.localDescription){
+      // tạo answer link cho host
+      const answerLink = btoa(JSON.stringify({ type:"answer", sdp: pc.localDescription.sdp }));
+      document.getElementById("online-room").value =
+        location.origin + location.pathname + "#" + answerLink;
+      logAdd("Online", "📌 Gửi link ANSWER lại cho chủ phòng!");
+    }
+  };
+
+  pc.setRemoteDescription({ type:"offer", sdp: room.sdp })
+    .then(()=>pc.createAnswer())
+    .then(ans=>pc.setLocalDescription(ans));
+
+  logAdd("Online", "⏳ Đang vào phòng...");
+}
+
+function onlineOnMessage(data){
+  try{
+    const msg = JSON.parse(data);
+    if(msg.type==="move"){
+      const w = msg.word;
+      // áp dụng move của đối thủ
+      wordUsed.add(w);
+      wordLast = w;
+      logAdd("Đối thủ", `🔥 "${w}"`);
+      toast("Đối thủ vừa nối: " + w);
+    }
+  }catch(e){
+    // ignore
+  }
+}
+
+function onlineSendMove(word){
+  if(wordMode!=="online") return;
+  if(dc && dc.readyState==="open"){
+    dc.send(JSON.stringify({ type:"move", word }));
+  }
+}
+
+/* =========================
+   AUTO LOAD TEAM IF SAVED
+========================= */
+window.addEventListener("load", ()=>{
+  weeklyResetIfNeeded();
+  renderRanking();
+
+  const saved = localStorage.getItem("team");
+  if(saved){
+    initTeam(saved);
+  }
+});
+
+// enter submit
+document.addEventListener("keydown", (e)=>{
+  if(e.key === "Enter"){
+    const wui = document.getElementById("word-ui");
+    const mui = document.getElementById("math-game-ui");
+    if(wui && wui.style.display !== "none"){
+      submitWord();
+    }else if(mui && mui.style.display !== "none"){
+      submitMath();
+    }
+  }
+});
+</script>
+
+</body>
+</html>
